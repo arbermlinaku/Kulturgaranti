@@ -24,23 +24,18 @@
   <iframe id="signage-frame" src="" allow="autoplay" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
   <script>
-    // URL-konfiguration med URL-parametrar för ren visning
-    const SLIDES_FORMIDDAG = "https://docs.google.com/presentation/d/e/2PACX-1vRuN-D_V_lpBtlj05bCRdlB6Im4FM5TWquBudW-KnjWlMpa4kz2E-yAiRgc6tPk8hZS0ZZqlSXFWqj0/embed?start=true&loop=true&delayms=5000&rm=minimal";
-    const SLIDES_EFTERMIDDAG = "https://docs.google.com/presentation/d/e/2PACX-1vRuN-D_V_lpBtlj05bCRdlB6Im4FM5TWquBudW-KnjWlMpa4kz2E-yAiRgc6tPk8hZS0ZZqlSXFWqj0/embed?start=true&loop=true&delayms=5000&rm=minimal";
+    // URL tillämpad med &rm=minimal för ren kioskvisning
+    const SLIDES_FORMIDDAG = "https://docs.google.com/presentation/d/e/2PACX-1vQ1Q4whKhiEfYJwu4PBMmiBPnS91khxwsGRLvEAJyWGzfob8iWmBRHf6eV4w2YlUCVIEv6fHHDEtG5B/pub?start=true&loop=true&delayms=5000&rm=minimal";
+    const SLIDES_EFTERMIDDAG = "https://docs.google.com/presentation/d/e/2PACX-1vQ1Q4whKhiEfYJwu4PBMmiBPnS91khxwsGRLvEAJyWGzfob8iWmBRHf6eV4w2YlUCVIEv6fHHDEtG5B/pub?start=true&loop=true&delayms=5000&rm=minimal";
 
     let currentURL = "";
 
     function updateSchedule() {
       const now = new Date();
       const hours = now.getHours();
-      let targetURL = "";
-
-      // Schemaläggning: Förmiddag (07:00–11:59), Eftermiddag/Kväll (12:00–06:59)
-      if (hours >= 7 && hours < 12) {
-        targetURL = SLIDES_FORMIDDAG;
-      } else {
-        targetURL = SLIDES_EFTERMIDDAG;
-      }
+      
+      // Tidsbaserad schemaläggning: Förmiddag (07:00–11:59), Eftermiddag/Kväll (12:00–06:59)
+      let targetURL = (hours >= 7 && hours < 12) ? SLIDES_FORMIDDAG : SLIDES_EFTERMIDDAG;
 
       if (targetURL !== currentURL) {
         currentURL = targetURL;
@@ -57,8 +52,8 @@
     }
 
     updateSchedule();
-    setInterval(updateSchedule, 60000);  // Kontrollerar schemat varje minut
-    setInterval(refreshIframe, 300000);   // Tvingar mjuk uppdatering av cachen var 5:e minut
+    setInterval(updateSchedule, 60000);  // Kontrollera schemaskifte varje minut
+    setInterval(refreshIframe, 300000);   // Mjuk bakgrundsuppdatering av cachen var 5:e minut
   </script>
 </body>
 </html>

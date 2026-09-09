@@ -2,6 +2,8 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiosk Signage Wrapper</title>
   <style>
     html, body {
       margin: 0;
@@ -21,10 +23,17 @@
 </head>
 <body>
 
-  <iframe id="signage-frame" src="" allow="autoplay" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  <iframe 
+    id="signage-frame" 
+    src="" 
+    allow="autoplay; fullscreen; encrypted-media; picture-in-picture" 
+    allowfullscreen="true" 
+    mozallowfullscreen="true" 
+    webkitallowfullscreen="true">
+  </iframe>
 
   <script>
-    // delayms=60000 tvingar visning i 60 sekunder. /embed förhindrar iframe-blockering. &rm=minimal döljer kontroller.
+    // URL-konfiguration med parametrar för ren kioskvisning och 60-sekunders visningstid
     const SLIDES_URL = "https://docs.google.com/presentation/d/e/2PACX-1vRuN-D_V_lpBtlj05bCRdlB6Im4FM5TWquBudW-KnjWlMpa4kz2E-yAiRgc6tPk8hZS0ZZqlSXFWqj0/embed?start=true&loop=true&delayms=60000&rm=minimal";
     const BLANK_URL = "about:blank";
 
@@ -35,10 +44,10 @@
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
       // Schemaläggning: Aktiv mellan 07:30 (450 min) och 17:00 (1020 min)
-      const START_MINUTES = 7 * 60 + 30;  // 07:30 = 450 min
-      const END_MINUTES = 17 * 60;        // 17:00 = 1020 min
+      const START_MINUTES = 7 * 60 + 30; // 07:30
+      const END_MINUTES = 17 * 60;       // 17:00
 
-      let targetURL = (currentMinutes >= START_MINUTES && currentMinutes < END_MINUTES) ? SLIDES_URL : BLANK_URL;
+      const targetURL = (currentMinutes >= START_MINUTES && currentMinutes < END_MINUTES) ? SLIDES_URL : BLANK_URL;
 
       if (targetURL !== currentURL) {
         currentURL = targetURL;
@@ -50,14 +59,14 @@
       const frame = document.getElementById("signage-frame");
       if (frame && currentURL === SLIDES_URL) {
         const separator = currentURL.includes('?') ? '&' : '?';
-        // Uppdaterar cachen var 5:e minut (300 000 ms), vilket motsvarar exakt 5 hela videocykler utan avbrott mitt i filmen
+        // Mjuk cache-uppdatering var 5:e minut
         frame.src = currentURL + separator + 'refresh=' + new Date().getTime();
       }
     }
 
     updateSchedule();
-    setInterval(updateSchedule, 30000);  // Kontrollerar schemat var 30:e sekund
-    setInterval(refreshIframe, 300000);   // Mjuk bakgrundsuppdatering var 5:e minut
+    setInterval(updateSchedule, 30000); // Kontrollerar schemat var 30:e sekund
+    setInterval(refreshIframe, 300000);  // Tvingar bakgrundsuppdatering var 5:e minut
   </script>
 </body>
 </html>
